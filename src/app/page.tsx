@@ -8,6 +8,8 @@ import Packages from '@/components/Packages'
 import ContactForm from '@/components/ContactForm'
 import { services } from '@/lib/services'
 import { Service } from '@/types'
+import { initEmailJS } from '../components/EmailJSInit';
+import { useEffect } from 'react';
 
 export default function Home() {
     const [currentSection, setCurrentSection] = useState<string>('intro')
@@ -32,6 +34,10 @@ export default function Home() {
                 ) : null
         }
     }
+
+    useEffect(() => {
+        initEmailJS();
+    }, []);
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
