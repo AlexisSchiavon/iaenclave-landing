@@ -16,14 +16,19 @@ import { ArrowRight } from 'lucide-react'
 export default function Home() {
     const [currentSection, setCurrentSection] = useState('intro')
     const [selectedPackage, setSelectedPackage] = useState('')
+    const [navigationHistory, setNavigationHistory] = useState(['intro'])
     const router = useRouter()
 
     useEffect(() => {
         const handlePopState = (event: PopStateEvent) => {
             event.preventDefault()
-            if (currentSection !== 'intro') {
-                setCurrentSection('intro')
-                router.push('/')
+            if (navigationHistory.length > 1) {
+                const newHistory = [...navigationHistory]
+                newHistory.pop() // Remove current section
+                const previousSection = newHistory[newHistory.length - 1]
+                setCurrentSection(previousSection)
+                setNavigationHistory(newHistory)
+                router.push(`/?section=${previousSection}`)
             }
         }
 
@@ -32,10 +37,11 @@ export default function Home() {
         return () => {
             window.removeEventListener('popstate', handlePopState)
         }
-    }, [currentSection, router])
+    }, [navigationHistory, router])
 
     const navigateTo = (section: string) => {
         setCurrentSection(section)
+        setNavigationHistory([...navigationHistory, section])
         router.push(`/?section=${section}`)
     }
 
