@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import TypewriterEffect from './TypewriterEffect';
 import AnimatedBackground from './AnimatedBackground';
 import { Service, SetCurrentSectionProps } from '@/types';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { InfoIcon } from 'lucide-react';
 
 interface ServicesProps extends SetCurrentSectionProps {
     services: Service[];
 }
 
 const Services: React.FC<ServicesProps> = ({ services, setCurrentSection }) => {
+    const [openModal, setOpenModal] = useState<string | null>(null);
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -34,8 +38,29 @@ const Services: React.FC<ServicesProps> = ({ services, setCurrentSection }) => {
                             className="flex"
                         >
                             <Card className="flex flex-col justify-between w-full bg-white shadow-lg">
-                                <CardHeader>
+                                <CardHeader className="flex flex-row justify-between items-center">
                                     <CardTitle className="text-2xl font-bold">{service.name}</CardTitle>
+                                    <Dialog open={openModal === service.name} onOpenChange={(isOpen) => setOpenModal(isOpen ? service.name : null)}>
+                                        <DialogTrigger asChild>
+                                            <Button variant="ghost" size="sm">
+                                                <InfoIcon className="h-5 w-5" />
+                                                <span className="sr-only">Más información sobre {service.name}</span>
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent>
+                                            <DialogHeader>
+                                                <DialogTitle>{service.name}</DialogTitle>
+                                            </DialogHeader>
+                                            <div className="mt-4">
+                                                <h3 className="font-semibold text-lg mb-2">¿Qué es?</h3>
+                                                <p className="mb-4">{service.description?.what || 'Información no disponible'}</p>
+                                                <h3 className="font-semibold text-lg mb-2">¿Cómo funciona?</h3>
+                                                <p className="mb-4">{service.description?.how || 'Información no disponible'}</p>
+                                                <h3 className="font-semibold text-lg mb-2">Beneficio principal</h3>
+                                                <p>{service.description?.benefit || 'Información no disponible'}</p>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
                                 </CardHeader>
                                 <CardContent className="bg-white rounded-md p-6 flex-grow">
                                     <ul className="space-y-2 text-lg">

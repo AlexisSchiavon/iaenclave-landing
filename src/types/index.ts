@@ -1,5 +1,10 @@
 export interface Service {
     name: string;
+    description: {
+        what: string;
+        how: string;
+        benefit: string;
+    };
     packages: Package[];
 }
 
